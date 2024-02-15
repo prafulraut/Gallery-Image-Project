@@ -1,0 +1,34 @@
+.modal {
+  display: block !important;
+}
+
+.modal-dialog {
+  overflow-y: initial !important;
+}
+
+.modal-body {
+  height: 250px;
+  overflow-y: auto;
+}
+
+.image {
+  width: 100px;
+  height: 90px;
+}
+
+.color-light {
+  color: lightslategray;
+}
+
+.close-icon {
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.grey-textBox {
+  background-color: rgb(202, 209, 217);
+}
+
+.pl-2 {
+  padding-left: 20px;
+}

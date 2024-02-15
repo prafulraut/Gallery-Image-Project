@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <h6 class="modal-title">Multiple File Uploaded With Preview</h6>
+    <span class="close-icon" (click)="closeModel()" aria-hidden="true">&times;</span>
+</div>
+<div>
+    <div class="modal-body">
+        <ngx-dropzone class="file-drop-area grey-textBox" (change)="handleFileSelect($event)" [maxFileSize]="10485760"
+            [multiple]="true">
+            <div class="m-auto">
+                <span class="choose-file-button">Drag and drop </span>
+                <span class="file-message">or <span class="text-decoration-underline">Choose Your Files</span>
+                </span>
+            </div>
+        </ngx-dropzone>
+        <div class="text-danger text-center mt-2">
+            {{errorMsg}}
+        </div>
+    </div>
+    <hr *ngIf="files.length">
+    <div class="modal-body" *ngIf="files.length">
+        <div *ngFor="let file of files; let i = index" class="d-flex mb-3">
+            <div class="flex-shrink-0">
+                <img [src]="file.base64textString" alt="Selected Image" class="image border">
+            </div>
+            <div class="flex-grow-3 pl-2">
+                <strong>
+                    <p class="mb-0">{{file.name}}</p>
+                </strong>
+                <span class="color-light">Size {{ file.size | sizeCalculate }} &nbsp; &nbsp;
+                    Modified Time {{ file.lastModifiedDate | date : "dd/MM/YYYY, h:mm:ss a" }}</span>
+                <p class="text-decoration-underline color-light">
+                    <a type="button" (click)="onDelete(i)">Delete</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="onUpload()">Upload</button>
+        <button type="button" class="btn btn-light" (click)="closeModel()">Cancel</button>
+    </div>
+</div>

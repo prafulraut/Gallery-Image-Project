@@ -1,0 +1,18 @@
+<div class="modal-header">
+    <h5>Preview Image</h5>
+    <span class="close-icon" (click)="activeModal.dismiss()" aria-hidden="true">&times;</span>
+</div>
+<div class="modal-body image-container">
+    <button type="button" class="btn btn-link icon" (click)="showPreviousImage()"
+        [disabled]="isPreviousButtonDisabled()">
+        <fa-icon [icon]="leftIcon"></fa-icon>
+    </button>
+    <img class="img-fluid" [src]="imageUrl" alt="Preview Image">
+    <button type="button" class="btn btn-link icon" (click)="showNextImage()" [disabled]="isNextButtonDisabled()">
+        <fa-icon [icon]="rightIcon"></fa-icon>
+    </button>
+</div>
+<div class="text-center">
+    <h6>{{nameImage}}</h6>
+    <h6>{{sizeImage | sizeCalculate }}</h6>
+</div>

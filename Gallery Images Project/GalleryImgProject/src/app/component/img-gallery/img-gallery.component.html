@@ -1,0 +1,141 @@
+<div class="main-div">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <strong>
+                <a class="navbar-brand p-2" href="">Media Library</a>
+            </strong>
+            <button class="navbar-toggler m-2" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="mt-2">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <form class="d-flex">
+                                <div class="input-group-text border-0 search-container">
+                                    <i class="bi bi-search search-icon"></i>
+                                    <input type="text" class="form-control" [(ngModel)]="imageName" name="imageName"
+                                        (input)="filterImages()" placeholder="Search" aria-label="Search"
+                                        aria-describedby="search-icon">
+                                </div>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                <div class="navbar-nav me-auto mb-2 mb-lg-0">
+                </div>
+                <div class="d-flex m-2">
+                    <div class="d-flex justify-content-start">
+                        <button type="button" class="btn border btn-sm btn-light icon me-4"
+                            (click)="deleteSelectedItems()" [disabled]="selectedItems.length === 0">
+                            <fa-icon [icon]="trash"></fa-icon>
+                        </button>
+                        <div class="d-flex me-3">
+                            <div class="icon border" (click)="toggleViewType('grid')"
+                                [ngClass]="viewType === 'grid' ? 'active' : 'not-active'">
+                                <span>
+                                    <i class="bi bi-grid-fill"></i>
+                                </span>
+                            </div>
+                            <div class="icon border" (click)="toggleViewType('list')"
+                                [ngClass]="viewType === 'list' ? 'active' : 'not-active'">
+                                <a>
+                                    <fa-icon [icon]="bars"></fa-icon>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form class="d-flex p-2">
+                    <button type="button" class="btn btn-primary" data-target="#fileUploadModal"
+                        (click)="openUploadImageDialog()">
+                        Upload File
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="container container-div">
+        <div *ngIf="filteredImages.length > 0" [ngClass]="filteredImages.length ? 'main' : ''">
+            <ng-container *ngIf="viewType=='grid'">
+                <div class="row">
+                    <div class="col-sm-6 col-md-4 mt-4 col-lg-3" *ngFor="let image of filteredImages">
+                        <div class="card image-card " [ngClass]="isSelected(image.id) ? 'border-card' : '' ">
+                            <img [src]="image.base64textString" alt="Selected Image" class="card-img-top image"
+                                height="100%" width="100%">
+                            <div class="image-overlay">
+                                <div class="custom-control custom-checkbox position-absolute top-0 start-0 m-2">
+                                    <input type="checkbox" class="custom-control-input" [checked]="isSelected(image.id)"
+                                        (change)="onCheckboxChange(image.id)">
+                                    <label class="custom-control-label"></label>
+                                </div>
+                                <div class="position-absolute top-0 end-0 m-2" *ngIf="!selectedItems.length">
+                                    <button type="button" class="btn btn-sm" (click)="openDeleteImageDialog(image.id)">
+                                        <i class="bi bi-archive text-white"></i>
+                                    </button>
+                                </div>
+                                <div class="position-absolute top-50 start-50 translate-middle">
+                                    <button type="button" class="btn btn-light btn-sm" data-target="#imageModal"
+                                        (click)="openPreviewImageDialog(image.id)">
+                                        Preview
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="image-name">{{image.name}}</p>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="viewType=='list'">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">
+                                <input type="checkbox" class="custom-control-input" [(ngModel)]="isChecked"
+                                    (change)="selectAll($event)">
+                            </th>
+                            <th>Name</th>
+                            <th>File Size</th>
+                            <th>Upload Date</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let image of filteredImages" class="hoverable-row fw-normal">
+                            <td class="text-center mt-4"> <input type="checkbox" class="custom-control-input  mt-3"
+                                    [checked]="isSelected(image.id)" (change)="onCheckboxChange(image.id);"></td>
+                            <td>
+                                <img [src]="image.base64textString" alt="Selected Image" width="50px" height="50px">
+                                {{image.name}}
+                            </td>
+                            <td>{{ image.size | sizeCalculate }}</td>
+                            <td>{{image.lastModifiedDate | date : "dd/MM/YYYY h:mm:ss a"}}</td>
+                            <td>
+                                <div *ngIf="!selectedItems.length">
+                                    <button type="button" class="btn btn-sm btn-light hover-buttons"
+                                        (click)="openDeleteImageDialog(image.id)">
+                                        <fa-icon [icon]="trash"></fa-icon>
+                                    </button>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-light btn-sm hover-buttons"
+                                    data-target="#imageModal" (click)="openPreviewImageDialog(image.id)">
+                                    Preview
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-container>
+        </div>
+        <ng-container *ngIf="!filteredImages.length">
+            <div class="no-data">
+                <h1>No data available</h1>
+            </div>
+        </ng-container>
+    </div>
+</div>
